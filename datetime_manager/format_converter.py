@@ -1,13 +1,35 @@
-# datetime_manager/format_converter.py
 from datetime import datetime
 
-def str_to_datetime(date_str, fmt="%Y-%m-%d %H:%M:%S"):
-    return datetime.strptime(date_str, fmt)
+def parse_date(date_string, yearfirst=True, monthfirst=False):
+    if yearfirst:
+        formats = ["%Y-%m-%d", "%Y.%m.%d", "%Y/%m/%d", "%Y%m%d"]
+    elif monthfirst:
+        formats = ["%m-%d-%Y", "%m.%d.%Y", "%m/%d/%Y", "%m%d%Y"]
+    else:
+        formats = [date_string]
 
-def datetime_to_str(date_obj, fmt="%Y-%m-%d %H:%M:%S"):
-    return date_obj.strftime(fmt)
+    for fmt in formats:
+        try:
+            return datetime.strptime(date_string, fmt)
+        except ValueError:
+            pass
 
-def reformat_datetime(date_str, from_fmt="%Y-%m-%d %H:%M:%S", to_fmt="%d-%m-%Y %I:%M %p"):
-    date_obj = str_to_datetime(date_str, from_fmt)
-    return datetime_to_str(date_obj, to_fmt)
-  
+    raise ValueError("Invalid date format")
+
+def format_date(date_obj, yearfirst=True, monthfirst=False, format="%Y-%m-%d"):
+    if yearfirst:
+        return date_obj.strftime(format)
+    elif monthfirst:
+        return date_obj.strftime(format)
+    else:
+        return date_obj.strftime(format)
+'''
+# Example usage
+date_str = "2008-01-01"
+parsed_date = parse_date(date_str)
+print(parsed_date)
+
+date_obj = datetime(2008, 1, 1)
+formatted_date = format_date(date_obj, format="%m-%d-%Y")
+print(formatted_date)
+'''
